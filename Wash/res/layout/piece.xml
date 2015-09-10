@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res/com.google.wash" >
+    
+        <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:background="#FFF" >
+
+        <TextView
+            android:id="@+id/ivTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="件洗" />
+
+        <ImageView
+            android:id="@+id/tvCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:src="@drawable/back"
+            android:textColor="#00bfff" />
+    </RelativeLayout>
+    <com.astuetz.PagerSlidingTabStrip
+    android:id="@+id/tabs"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    app:pstsIndicatorColor="@android:color/holo_blue_light" 
+    app:pstsSelectedTextColor="@android:color/holo_blue_light"
+    app:pstsShouldExpand="true" 
+    android:background="@drawable/stroketab"  />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPagerPiece"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
