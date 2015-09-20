@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    android:orientation="vertical" >
+     <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginBottom="10dp"
+        android:background="#FFF" >
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:src="@drawable/back"
+            android:textColor="#00bfff" />
+
+        <TextView
+            android:id="@+id/tvTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的地址"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tv_change_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="修改"
+            android:textColor="#28ccfc" />
+    </RelativeLayout>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="#fff"
+         android:paddingLeft="10dp"
+         android:orientation="vertical" >
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:padding="10dp" >
+
+             <ImageView
+                 android:id="@+id/imageView1"
+                 android:layout_width="25dp"
+                 android:layout_height="25dp"
+                 android:layout_gravity="center_vertical"
+                 android:src="@drawable/user_info_potrait" />
+
+             <TextView
+                 android:id="@+id/textView_name"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginLeft="10dp"
+                 android:gravity="center"
+                 android:textSize="16sp"
+                 android:text="李女士" />
+
+         </LinearLayout>
+         <View
+                 android:layout_width="match_parent"
+                 android:layout_height="1dp"
+                 android:layout_marginLeft="10dp"
+                 android:background="@drawable/padding" />
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:padding="10dp" >
+
+             <ImageView
+                 android:id="@+id/imageView2"
+                 android:layout_width="25dp"
+                 android:layout_height="25dp"
+                 android:layout_gravity="center_vertical"
+                 android:src="@drawable/user_info_phone" />
+
+             <TextView
+                 android:id="@+id/textView_phonenum"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginLeft="10dp"
+                 android:gravity="center"
+                 android:textSize="16sp"
+                 android:text="18600917362" />
+
+         </LinearLayout>
+          <View
+                 android:layout_width="match_parent"
+                 android:layout_height="1dp"
+                 android:layout_marginLeft="10dp"
+                 android:background="@drawable/padding" />
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:padding="10dp" >
+
+             <ImageView
+                 android:id="@+id/imageView3"
+                 android:layout_width="25dp"
+                 android:layout_height="25dp"
+                 android:src="@drawable/user_info_address" />
+
+             <TextView
+                 android:id="@+id/textView_address"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginLeft="10dp"
+                 android:textSize="16sp"
+                 android:text="成都市青羊区家园南街1号  上城成\n都花园六栋二单元1204号" />
+
+         </LinearLayout>
+
+     </LinearLayout>
+
+</LinearLayout>
