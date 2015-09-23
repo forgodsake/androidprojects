@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -61,6 +63,9 @@ public class MainActivity extends FragmentActivity  {
 		
 		viewPager=(ViewPager) findViewById(R.id.fragment);
 		viewPager.setAdapter(adapter);
+        //设置默认预加载页数为3，解决滑动不流畅问题
+		viewPager.setOffscreenPageLimit(3);  
+
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -73,6 +78,7 @@ public class MainActivity extends FragmentActivity  {
 			
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				 
 			}
 			
 			@Override

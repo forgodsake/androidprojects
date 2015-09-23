@@ -56,30 +56,7 @@ public class VerifyActivity extends Activity {
 		textState.setMovementMethod(LinkMovementMethod.getInstance());
 		textState.setText(spannableStringBuilder);
 		
-		eh=new EventHandler(){
-			 
-            @Override
-            public void afterEvent(final int event, final int result, final Object data) {
-            	runOnUiThread(new Runnable() {
-					public void run() {
-						
-						if (result == SMSSDK.RESULT_COMPLETE) {
-							if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-			                	Toast.makeText(VerifyActivity.this, "验证成功", Toast.LENGTH_SHORT).show();
-			                	startActivity(new Intent(VerifyActivity.this,MainActivity.class));
-			                	finish();
-			                //提交验证码成功
-			                }
-						} else {
-							Toast.makeText(VerifyActivity.this, "获取验证失败", Toast.LENGTH_SHORT).show();
-						    //验证失败
-							return;
-						}
-					}
-				});
-            }
-        }; 
-       SMSSDK.registerEventHandler(eh); //注册短信回调
+		
 	}
     
 	@OnClick({R.id.gobutton,R.id.ivAppBack,R.id.textView_countdown})
@@ -94,7 +71,31 @@ public class VerifyActivity extends Activity {
 			}else if (number.length()!=11) {
 				Toast.makeText(this, "您输入的手机号码有误，请重新输入！", Toast.LENGTH_SHORT).show();
 			}else{
-				SMSSDK.submitVerificationCode("86",number,code);
+				eh=new EventHandler(){
+					 
+		            @Override
+		            public void afterEvent(final int event, final int result, final Object data) {
+		            	runOnUiThread(new Runnable() {
+							public void run() {
+								
+								if (result == SMSSDK.RESULT_COMPLETE) {
+									if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+					                	Toast.makeText(VerifyActivity.this, "验证成功", Toast.LENGTH_SHORT).show();
+					                	startActivity(new Intent(VerifyActivity.this,MainActivity.class));
+					                	finish();
+					                //提交验证码成功
+					                }
+								} else {
+									Toast.makeText(VerifyActivity.this, "获取验证失败", Toast.LENGTH_SHORT).show();
+								    //验证失败
+									return;
+								}
+							}
+						});
+		            }
+		        }; 
+		       SMSSDK.registerEventHandler(eh); //注册短信回调
+			   SMSSDK.submitVerificationCode("86",number,code);
 			}
 			break;
 		case R.id.ivAppBack:
@@ -129,6 +130,14 @@ public class VerifyActivity extends Activity {
 		public void onTick(long millisUntilFinished){//计时过程显示
 			countDown.setClickable(false);
 			countDown.setText(millisUntilFinished /1000+"秒后重新获取");
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (eh!=null) {
+			eh.onUnregister();
 		}
 	}
 }

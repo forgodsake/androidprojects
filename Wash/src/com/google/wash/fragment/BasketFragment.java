@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +13,6 @@ import java.util.Set;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
-import android.hardware.camera2.TotalCaptureResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -84,6 +82,7 @@ public class BasketFragment extends Fragment {
 		adapter = new MySimpleAdapter(getActivity(), list, R.layout.basket_list_item, new String[]{"image","name","price","num"}, new int []{R.id.imageViewGoods,R.id.textViewName,R.id.textViewPrice,R.id.textViewNum});
 		washList.setAdapter(adapter);
 		
+		
 		num = getActivity().getSharedPreferences("myShared", Context.MODE_PRIVATE).getInt("num", 0);
 		pos = getActivity().getSharedPreferences("myShared", Context.MODE_PRIVATE).getInt("position", 6);
 	
@@ -150,6 +149,7 @@ public class BasketFragment extends Fragment {
 		text_totally.setText("￥"+sum);
 		int pay = (sum-30)>0?(sum-30):0;
 		text_total.setText("￥"+pay);
+		
 	    return view;
 	}
 	@OnClick({R.id.ivBack,R.id.imageView_pay,R.id.tvDeleteOrder,R.id.rl_change})
@@ -190,6 +190,7 @@ public class BasketFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 		if (getActivity().getIntent().getStringExtra("name") != null) {
 			rl_change.setVisibility(View.GONE);
 			rl_save.setVisibility(View.VISIBLE);
@@ -204,6 +205,7 @@ public class BasketFragment extends Fragment {
 			}
 		}
 		setlength(washList);
+		
 	}
 	
 	@Override
@@ -378,11 +380,13 @@ public class BasketFragment extends Fragment {
 	
 	//对set进行排序 从而按照点击位置找出相关数据
 	private void sort(ArrayList<String> list){
-	    Collections.sort(list, new Comparator() {
+	    Collections.sort(list, new Comparator<Object>() {
 	        @Override
 	        public int compare(Object o1, Object o2) {
 	          return new Double((String) o1).compareTo(new Double((String) o2));
 	        }
 	      });
 	}
+	
+	
 }

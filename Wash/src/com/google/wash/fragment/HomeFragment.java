@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -62,7 +63,7 @@ public class HomeFragment extends Fragment implements LocationListener{
 	private LocationManager locManager;
 	private ImageView[] indicator_imgs = new ImageView[4];//存放引导图片数组
 	private ScheduledExecutorService scheduledExecutorService;
-	private int currentItem = 0;
+	private int currentItem = 4*1000;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,7 +122,8 @@ public class HomeFragment extends Fragment implements LocationListener{
     	
     }
     
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onStart() {
     	super.onStart();
     	views = new ArrayList<ImageView>();
@@ -157,9 +159,13 @@ public class HomeFragment extends Fragment implements LocationListener{
 	            }
 		};
 		pager.setAdapter(adapter);
+		//设置轮播图初始显示位置，使之一开始即可左滑
+		pager.setCurrentItem(views.size()*1000);
 	    pager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
+				//手指滑动后重新赋值 
+				currentItem=arg0;
 				// 改变所有导航的背景图片为：未选中
 			      for (int i = 0; i < indicator_imgs.length; i++) {
 			        indicator_imgs[i].setBackgroundResource(R.drawable.dot_blue);
