@@ -26,12 +26,21 @@
         android:layout_marginRight="20dp"
         android:textColor="#FF8000"
         android:textSize="18sp"
-        android:text="￥68" />
+        android:text="68" />
+     <TextView
+        android:id="@+id/textViewsymbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/textViewPrice"
+        android:textColor="#FF8000"
+        android:textSize="18sp"
+        android:text="￥" />
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/textViewPrice"
+        android:layout_toLeftOf="@id/textViewsymbol"
         android:layout_centerVertical="true"
         android:textSize="16sp"
         android:text="x" />
@@ -87,4 +96,7 @@
         android:background="#bbb"
          android:layout_alignParentRight="true" 
          android:layout_below="@id/imageViewGoods"/>
+
+   
+
 </RelativeLayout>

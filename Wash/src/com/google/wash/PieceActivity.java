@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.wash.fragment.SpringFragment;
 import com.google.wash.fragment.Spring_net_Fragment;
+import com.google.wash.utils.Const;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -36,6 +37,9 @@ public class PieceActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.piece);
+		
+		Const.activityList.add(this);
+		
 		ViewUtils.inject(this);
 		fragments = new ArrayList<Fragment>();
         fragments.add(new SpringFragment());

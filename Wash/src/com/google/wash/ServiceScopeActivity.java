@@ -5,6 +5,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ public class ServiceScopeActivity extends Activity {
 	
 	@OnClick(R.id.ivBack)
 	private void click(View view){
+		Intent intent = new Intent(ServiceScopeActivity.this,MainActivity.class);
+		startActivity(intent);
 		finish();
 	}
 	

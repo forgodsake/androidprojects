@@ -117,11 +117,7 @@
                 android:value="8e106b5429e1de9d801fcdaa" />
 
             <activity android:name=".OpenActivity" >
-                 <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
+                  
             </activity>
             <activity
                 android:name="com.mob.tools.MobUIShell"
@@ -143,9 +139,14 @@
                 android:label="@string/app_name" >
                 
             </activity>
-            <activity android:name=".MainActivity" 
+            <activity 
+                android:name=".MainActivity" 
                 android:screenOrientation="portrait" >
-               
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
             </activity>
             <activity android:name=".VerifyActivity" />
             <activity android:name=".Verify_net_Activity" >

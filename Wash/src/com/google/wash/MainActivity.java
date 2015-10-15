@@ -9,17 +9,17 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.google.wash.fragment.BasketFragment;
 import com.google.wash.fragment.HomeFragment;
 import com.google.wash.fragment.MoreFragment;
 import com.google.wash.fragment.UserFragment;
+import com.google.wash.utils.Const;
 
 public class MainActivity extends FragmentActivity  {
 	
@@ -29,16 +29,19 @@ public class MainActivity extends FragmentActivity  {
 //		myImage0.setBounds(0, 0, 80, 80);
 //		radioButton.setCompoundDrawables(null, myImage0, null, null);
 
-    
+    private int i = 0;
 	private List<Fragment> fragments;
 	private FragmentPagerAdapter adapter;
 	private ViewPager viewPager;
 	private RadioGroup radioGruop;
 	
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		//记录Activity以便退出时全部finish(),后同
+		Const.activityList.add(this);
 		
 		fragments=new ArrayList<Fragment>();
 		fragments.add(new HomeFragment());
@@ -129,6 +132,17 @@ public class MainActivity extends FragmentActivity  {
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
+    }
+    
+    @Override
+    public void onBackPressed() {
+    	i++;
+    	if (i==1) {
+			Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+		}
+    	if (i==2) {
+    		Const.exit();
+		}
     }
 	
 }

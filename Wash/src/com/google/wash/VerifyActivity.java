@@ -20,6 +20,7 @@ import android.widget.Toast;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
+import com.google.wash.utils.Const;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -43,6 +44,8 @@ public class VerifyActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.verify);
 		ViewUtils.inject(this);
+		//记录Activity以便退出时全部finish()
+		Const.activityList.add(this);
 		
 		count = new TimeCount(60000, 1000);//构造CountDownTimer对象
 		Button goButton=(Button) findViewById(R.id.gobutton);

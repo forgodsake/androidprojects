@@ -39,7 +39,7 @@ public class SpringFragment extends Fragment {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("image",clothes.getImages()[i]);
 			map.put("name", clothes.getNames()[i]);
-			map.put("price","￥"+ clothes.getPrices()[i]);
+			map.put("price",clothes.getPrices()[i]);
 			list.add(map);
 		}
 		adapter = new SimpleAdapter(getActivity(), list, R.layout.grid_piece_item, 

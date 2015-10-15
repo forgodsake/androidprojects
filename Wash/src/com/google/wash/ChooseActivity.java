@@ -1,8 +1,11 @@
 package com.google.wash;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.wash.database.DBStorage;
 import com.google.wash.entity.Clothes;
+import com.google.wash.utils.Const;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
@@ -19,6 +24,7 @@ public class ChooseActivity extends Activity implements OnClickListener{
 	
 	private int x=1;
 	private int y;
+	private DBStorage dbstorage;
 	private Clothes clothes=new Clothes();
 	@ViewInject(R.id.imageViewGoods)
 	private ImageView goodsImage;
@@ -47,7 +53,12 @@ public class ChooseActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.choose);
+	    
+	    Const.activityList.add(this);
+	    
 	    ViewUtils.inject(this);
+	    dbstorage=new DBStorage(this);
+		dbstorage.openOrCreateDataBase();
 	    
 	    y=getIntent().getIntExtra("detail", 6);
 	    btDelete.setOnClickListener(this);
@@ -84,12 +95,29 @@ public class ChooseActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.buttonAddto:
 			Intent intent = new Intent(ChooseActivity.this,MainActivity.class);
+			Cursor cursor = dbstorage.selectAll();
+			while (cursor.moveToNext()) {
+				if (cursor.getString(3).equals(clothes.getNames()[y])) {
+					Map<String,String> cloth = new HashMap<String, String>();
+					cloth.put("name", clothes.getNames()[y]);
+					cloth.put("image", ""+clothes.getImages()[y]);
+					cloth.put("price", clothes.getPrices()[y]);
+					x = x + Integer.parseInt(cursor.getString(2));
+					cloth.put("num",""+x);
+					dbstorage.update(cloth);
+					intent.putExtra("num", x);
+					startActivity(intent);
+					finish();
+					return;
+				}
+			}
+			Map<String,String> cloth = new HashMap<String, String>();
+			cloth.put("name", clothes.getNames()[y]);
+			cloth.put("image", ""+clothes.getImages()[y]);
+			cloth.put("price", clothes.getPrices()[y]);
+			cloth.put("num",""+ x);
+			dbstorage.insert(cloth);
 			intent.putExtra("num", x);
-			intent.putExtra("position", y);
-			Editor editor = getSharedPreferences("myShared", MODE_APPEND).edit();
-			editor.putInt("num", x);
-			editor.putInt("position", y);
-			editor.commit();
 			startActivity(intent);
 			finish();
 			break;
@@ -97,6 +125,12 @@ public class ChooseActivity extends Activity implements OnClickListener{
 			break;
 		}
 		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		dbstorage.dataBaseClose();
 	}
 	
 }

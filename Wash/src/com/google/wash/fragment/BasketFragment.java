@@ -2,17 +2,14 @@ package com.google.wash.fragment;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +29,7 @@ import android.widget.Toast;
 import com.google.wash.PayActivity;
 import com.google.wash.R;
 import com.google.wash.UserInfoActivity;
-import com.google.wash.entity.Clothes;
+import com.google.wash.database.DBStorage;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -67,10 +64,9 @@ public class BasketFragment extends Fragment {
 	private TextView text_total;
 	private Set<String> position,count ;
 	private SimpleAdapter adapter;
-	private List<HashMap<String, Object>> list;
-	private Clothes clothes=new Clothes();
-	private int pos, num,sum;
-	private ArrayList<String> list1,list2;
+	private int sum;
+    private ArrayList<Map<String, String>> list;
+	private DBStorage dbstorage;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -78,77 +74,33 @@ public class BasketFragment extends Fragment {
 		Bundle savedInstanceState) {
 	    View view = inflater.inflate(R.layout.basket, container, false);
 	    ViewUtils.inject(this, view);
-		list = new ArrayList<HashMap<String,Object>>();
+	    dbstorage=new DBStorage(getActivity());
+		dbstorage.openOrCreateDataBase();
+		Cursor cursor = dbstorage.selectAll();
+		list = new ArrayList<Map<String,String>>();
+		if (!"".equals(cursor)&&cursor!=null) {
+			
+			while (cursor.moveToNext()) {
+				Map<String,String> cloth = new HashMap<String, String>();
+				cloth.put("image", cursor.getString(1));
+				cloth.put("num",cursor.getString(2));
+				cloth.put("name", cursor.getString(3));
+				cloth.put("price", cursor.getString(4));
+				list.add(cloth);
+				sum += Integer.parseInt(cursor.getString(2))*Integer.parseInt(cursor.getString(4));
+			}
+		}
 		adapter = new MySimpleAdapter(getActivity(), list, R.layout.basket_list_item, new String[]{"image","name","price","num"}, new int []{R.id.imageViewGoods,R.id.textViewName,R.id.textViewPrice,R.id.textViewNum});
 		washList.setAdapter(adapter);
 		
 		
-		num = getActivity().getSharedPreferences("myShared", Context.MODE_PRIVATE).getInt("num", 0);
-		pos = getActivity().getSharedPreferences("myShared", Context.MODE_PRIVATE).getInt("position", 6);
-	
-		position=(HashSet<String>)getActivity().getSharedPreferences("myShared",Context.MODE_PRIVATE ).getStringSet("saveposition", new HashSet<String>()) ;
-		count = (HashSet<String>)getActivity().getSharedPreferences("myShared",Context.MODE_PRIVATE ).getStringSet("savecount", new HashSet<String>()) ;
-	    list1 = new ArrayList<String>(position);
-	    sort(list1);
-	    list2 = new ArrayList<String>(count);
-	    sort(list2);
-	    sum = 0;
-	    for (int i = 0; i < list1.size(); i++) {
-	    	String positioni = list1.get(i);
-			String counti = list2.get(i);
-			int x1 = Integer.parseInt(positioni); 
-			int x2 = Integer.parseInt(counti); 
-			 HashMap<String, Object>   map =  new HashMap<String, Object>();
-			 map.put("image",clothes.getImages()[x1]);
-			 map.put("name", clothes.getNames()[x1]);
-			 int price = Integer.parseInt(clothes.getPrices()[x1])*(x2-100*x1);
-			 map.put("price","￥"+ price );
-			 map.put("num",x2-100*x1 );
-			 list.add(map);
-			 adapter.notifyDataSetChanged();
-			 sum += price;
-		}
-			
-		if (num>0) {
-			
-		    if(!position.contains(String.valueOf(pos))){
-				position.add(String.valueOf(pos));
-				count.add(String.valueOf(num+pos*100));
-				HashMap<String, Object>   map =  new HashMap<String, Object>();
-				map.put("image",clothes.getImages()[pos]);
-				map.put("name", clothes.getNames()[pos]);
-				int price =  Integer.parseInt(clothes.getPrices()[pos])*num;
-				map.put("price","￥"+ price);
-				map.put("num",num );
-				list.add(map);
-				adapter.notifyDataSetChanged();
-				setlength(washList);
-				sum+=price;
-			}else {
-				HashMap<String, Object>  map = list.get(position());
-				int numold = Integer.parseInt(map.get("num").toString());
-				int priceold = Integer.parseInt(map.get("price").toString().substring(1));
-				count.remove(String.valueOf(numold+pos*100));
-				map.put("num",num+numold );
-				count.add(String.valueOf(numold+num+pos*100));
-				saveData();
-				int price = Integer.parseInt(clothes.getPrices()[pos])*num;
-				map.put("price","￥"+ (price+priceold) );
-				adapter.notifyDataSetChanged();
-				setlength(washList);
-				sum+=price;
-			};
-			//添加完毕清除记录
-			getActivity().getSharedPreferences("myShared", Context.MODE_APPEND).edit().putInt("num", 0).commit();
-			getActivity().getSharedPreferences("myShared", Context.MODE_APPEND).edit().putInt("position", 6).commit();
-			saveData();
-		}
+		
 		if (list.size()!=0) {
 	    	blank.setVisibility(View.GONE);
 		}
-		text_totally.setText("￥"+sum);
+		text_totally.setText(""+sum);
 		int pay = (sum-30)>0?(sum-30):0;
-		text_total.setText("￥"+pay);
+		text_total.setText(""+pay);
 		
 	    return view;
 	}
@@ -172,6 +124,7 @@ public class BasketFragment extends Fragment {
 			break;
 		case R.id.tvDeleteOrder:
 			list.clear();
+			dbstorage.deleteAll();
 			adapter.notifyDataSetChanged();
 			blank.setVisibility(View.VISIBLE);
 			if (position!=null) {
@@ -179,7 +132,6 @@ public class BasketFragment extends Fragment {
 				position = null;
 				count.clear();
 				count = null;
-				saveData();
 			}
 			break;
 		default:
@@ -214,6 +166,7 @@ public class BasketFragment extends Fragment {
 		if (requestCode==1) {
 			if (resultCode==2) {
 				list.clear();
+				dbstorage.deleteAll();
 				adapter.notifyDataSetChanged();
 				blank.setVisibility(View.VISIBLE);
 				if (position!=null) {
@@ -221,23 +174,11 @@ public class BasketFragment extends Fragment {
 					position = null;
 					count.clear();
 					count = null;
-					saveData();
 				}
 			}
 		}
 	}
 	
-	//计算重复添加衣物的位置
-	public int position(){
-		 sort(list1);
-		 for (int i = 0; i< list1.size(); i++) {
-			 String positioni = list1.get(i);
-			 if (Integer.parseInt(positioni)==pos) {
-					return i;
-		     }
-		   }
-		 return 0;
-	 }
 	
 	private class MySimpleAdapter extends SimpleAdapter {  
 		  
@@ -298,20 +239,20 @@ public class BasketFragment extends Fragment {
   
             @Override  
             public void handleMessage(Message msg) {  
-                super.handleMessage(msg);  
-                switch (msg.what) {  
-                case 1:  
-                	TextView text_price0 = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewPrice);
-                	TextView text_num = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewNum);
-                	int priceTotal0 = Integer.parseInt(text_price0.getText().toString().substring(1));
-                	int num = Integer.parseInt(text_num.getText().toString());
-                	int sum0 = Integer.parseInt(text_totally.getText().toString().substring(1));
-                	text_totally.setText("￥"+(sum-priceTotal0));
-            		int pay0 = (sum-30)>0?(sum-30):0;
-            		text_total.setText("￥"+(pay0-priceTotal0));
+                super.handleMessage(msg); 
+                TextView text_price = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewPrice);
+            	TextView text_num = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewNum);
+            	int price = Integer.parseInt(text_price.getText().toString());
+            	int num = Integer.parseInt(text_num.getText().toString());
+            	int sum = Integer.parseInt(text_totally.getText().toString());
+            	int pay = (sum-price*num-30)>0?(sum-price*num-30):0;
+            	String name=list.get(msg.arg1).get("name");
+            	switch (msg.what) {  
+                case 1: 
+                	text_totally.setText(""+(sum-price*num));
+            		text_total.setText(""+pay);
+            		dbstorage.delete(name);
                 	list.remove(msg.arg1);  
-                	position.remove(pos);
-                	count.remove(num+pos*100);
                     notifyDataSetChanged();  
                     setlength(washList);
                     if (list.size()==0) {
@@ -319,39 +260,23 @@ public class BasketFragment extends Fragment {
 					}
                     break;  
                 case 2:  
-                	TextView text_price = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewPrice);
-                	TextView text_num_del = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewNum);
-                	int sum = Integer.parseInt(text_totally.getText().toString().substring(1));
-                	int priceTotal = Integer.parseInt(text_price.getText().toString().substring(1));
-                	int numdel = Integer.parseInt(text_num_del.getText().toString());
-                	int price = priceTotal/numdel;
-                	numdel--;
-                	int total = numdel*price;
-                	if (numdel>0) {
-                		text_num_del.setText(numdel+"");
-                		text_price.setText("￥"+total);
-                		text_totally.setText("￥"+(sum+total-priceTotal));
-                		int pay = (sum-30)>0?(sum-30):0;
-                		text_total.setText("￥"+(pay+total-priceTotal));
-					}else {
-						text_num_del.setText("1");
-						text_price.setText("￥"+price);
+                	pay = (sum-price-30)>0?(sum-price-30):0;
+                	if (num>1) {
+						num--;
+						dbstorage.update_num(num, name);
+						text_num.setText(num+"");
+						text_totally.setText(""+(sum-price));
+						text_total.setText(""+pay);
 					}
+					
                 	break;  
-                case 3:  
-                	TextView text_price1 = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewPrice);
-                	TextView text_num_add = (TextView) washList.getChildAt(msg.arg1).findViewById(R.id.textViewNum);
-                	int sum1 = Integer.parseInt(text_totally.getText().toString().substring(1));
-                	int priceTotal1 = Integer.parseInt(text_price1.getText().toString().substring(1));
-                	int numadd = Integer.parseInt(text_num_add.getText().toString());
-                	int price1 = priceTotal1/numadd;
-                	numadd++;
-                	int total1=numadd*price1;
-                	text_num_add.setText(numadd+"");
-                	text_price1.setText("￥"+total1);
-                	text_totally.setText("￥"+(sum1+total1-priceTotal1));
-            		int pay = (sum1-30)>0?(sum1-30):0;
-            		text_total.setText("￥"+(pay+total1-priceTotal1));
+                case 3: 
+                	pay = (sum+price-30)>0?(sum+price-30):0;
+                	num++;
+                	dbstorage.update_num(num, name);
+                	text_num.setText(num+"");
+                	text_totally.setText(""+(sum+price));
+            		text_total.setText(""+pay);
                 	break;  
                 }  
             }  
@@ -370,23 +295,28 @@ public class BasketFragment extends Fragment {
 	    params.height = totalHeight + (list.getDividerHeight() * (adapter.getCount() - 1));
 	    list.setLayoutParams(params);
 	};
+	
 	//保存数据
 	private void saveData(){
-		Editor editor =	getActivity().getSharedPreferences("myShared", Context.MODE_APPEND).edit();
-		editor.putStringSet("savecount", count);
-		editor.putStringSet("saveposition", position);
-		editor.commit();
+	
 	}
 	
 	//对set进行排序 从而按照点击位置找出相关数据
-	private void sort(ArrayList<String> list){
-	    Collections.sort(list, new Comparator<Object>() {
-	        @Override
-	        public int compare(Object o1, Object o2) {
-	          return new Double((String) o1).compareTo(new Double((String) o2));
-	        }
-	      });
+//	private void sort(ArrayList<String> list){
+//	    Collections.sort(list, new Comparator<Object>() {
+//	        @Override
+//	        public int compare(Object o1, Object o2) {
+//	          return new Double((String) o1).compareTo(new Double((String) o2));
+//	        }
+//	      });
+//	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		dbstorage.dataBaseClose();
 	}
+	
 	
 	
 }

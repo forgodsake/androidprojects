@@ -1,13 +1,13 @@
 package com.google.wash;
 
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 public class UsageRulesActivity extends Activity{
     
@@ -19,6 +19,7 @@ public class UsageRulesActivity extends Activity{
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.usage_rules);
 	    ViewUtils.inject(this);
+	    
 	}
 	
 	@OnClick(R.id.ivBack)

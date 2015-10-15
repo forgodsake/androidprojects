@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -109,10 +108,12 @@ public class HomeFragment extends Fragment implements LocationListener{
 		case R.id.imageViewPiece:
 			Intent intent2 = new Intent(getActivity(),PieceActivity.class);
 	    	startActivity(intent2);
+	    	getActivity().finish();
 	    	break;
 		case R.id.imageView_state:
 			Intent intent3 = new Intent(getActivity(),ServiceScopeActivity.class);
 			startActivity(intent3);
+			getActivity().finish();
 			break;
 		default:
 			break;
@@ -153,8 +154,8 @@ public class HomeFragment extends Fragment implements LocationListener{
 	              
 	            @Override  
 	            public Object instantiateItem(ViewGroup container, int position) { 
-	            	container.removeView(views.get(position%views.size())); 
-	                container.addView(views.get(position%views.size()));    
+	            	
+	            ((ViewPager)container).addView(views.get(position%views.size()));    
 	                return views.get(position%views.size());  
 	            }
 		};
