@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:layout_alignParentBottom="true" >
+
+    <RelativeLayout
+        android:id="@+id/lay_bottomBox"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@drawable/bottom_bg" >
+
+        <ImageView
+            android:id="@+id/iv_Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/icon_big" />
+
+        <TextView
+            android:id="@+id/ivtextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_Icon"
+            android:padding="6dp"
+            android:textSize="18sp"
+            android:text="欢迎使用账单助手!" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/main_btn" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lay_slideMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lay_bottomBox"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/lv_slideMenu"
+            style="@style/StyleListView"
+             >
+        </ListView>
+    </LinearLayout>
+
+</RelativeLayout>

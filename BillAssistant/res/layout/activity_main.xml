@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/aaa"
+    android:id="@+id/layMainLayout" >"
+    <include layout="@layout/top_title"
+        android:id="@+id/top_title" />
+    <include layout="@layout/bottom_box"
+        android:id="@+id/bottom_box" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:id="@+id/mainbody"
+        android:layout_below="@id/top_title"
+        android:layout_above="@id/bottom_box" >
+    </LinearLayout>
+
+    
+</RelativeLayout>
